@@ -4,6 +4,17 @@ const pizzaController = {
     //get all Pizzas
     getAllPizza(req, res) {
         Pizza.find({})
+            //return all fields from attached comments, not just commentId
+            .populate({
+                path: 'comments',
+                //do not return the __v field
+                select: '-__v'
+            })
+            //do not return the __v field for pizzas either
+            .select('-__v')
+            //sort by id in descending order, returns the most recent pizzas first
+            //timestamp is contained within the objectId
+            .sort({ _id: -1 })
             .then(dbPizzaData => res.json(dbPizzaData))
             .catch(err => {
                 console.log(err);
@@ -14,6 +25,11 @@ const pizzaController = {
     //get a pizza by ID
     getPizzaById({ params }, res) {
         Pizza.findOne({ _id: params.id })
+            .populate({
+                path: 'comments',
+                select: '-__v'
+            })
+            .select('-__v')
             .then(dbPizzaData => {
                 //if no pizza is found,  send 404
                 if (!dbPizzaData) {
