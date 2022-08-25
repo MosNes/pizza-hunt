@@ -6,6 +6,7 @@ const pizzaController = {
         Pizza.find({})
             //return all fields from attached comments, not just commentId
             .populate({
+                //path points it to correct collection
                 path: 'comments',
                 //do not return the __v field
                 select: '-__v'
